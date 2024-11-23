@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Checkout</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1, h2 {
+            color: #555;
+        }
+        .cart-item {
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .cart-item h3 {
+            margin: 0;
+        }
+        .cart-item p {
+            margin: 5px 0;
+        }
+        .checkout-total {
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        /* Flash message styling */
+        .flash-messages {
+            margin-bottom: 20px;
+            padding: 10px;
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Checkout</h1>
+   
+    {% with messages = get_flashed_messages() %}
+        {% if messages %}
+            <div class="flash-messages">
+                <ul>
+                {% for message in messages %}
+                    <li>{{ message }}</li>
+                {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <h2>Your Cart</h2>
+    {% if cart_items %}
+        {% for item in cart_items %}
+            <div class="cart-item">
+                <h3>{{ item.name }}</h3>
+                <p>Price: ${{ item.price }}</p>
+                <p>Quantity: {{ item.quantity }}</p>
+                <p>Total: ${{ item.item_total }}</p>
+            </div>
+        {% endfor %}
+        <p class="checkout-total">Grand Total: ${{ total }}</p>
+        <form method="post">
+            {{ form.hidden_tag() }}
+            <button type="submit">Confirm Purchase</button>
+        </form>
+    {% else %}
+        <p>Your cart is empty!</p>
+    {% endif %}    
+
+    <a href="{{ url_for('shop') }}">Back to Shop</a>
+</body>
+</html>

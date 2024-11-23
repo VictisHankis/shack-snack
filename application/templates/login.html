@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f7f7f7;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+        h1 {
+            color: #555;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-width: 400px;
+            margin: auto;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 16px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .show-password {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .register-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Login</h1>
+    <form method="post">
+        {{ form.hidden_tag() }}
+        <label for="email">Email</label>
+        <input type="email" name="email" id="email" required>
+        
+        <label for="password">Password</label>
+        <input type="password" name="password" id="password" required>
+        
+        <div class="show-password">
+            <input type="checkbox" onclick="togglePassword()">
+            <label>Show Password</label>
+        </div>
+        
+        <button type="submit">Login</button>
+    </form>
+
+    <div class="register-link">
+        <p>Don't have an account? <a href="{{ url_for('register') }}">Sign Up here</a></p>
+    </div>
+
+    <script>
+        function togglePassword() {
+            var password = document.getElementById("password");
+            if (password.type === "password") {
+                password.type = "text";
+            } else {
+                password.type = "password";
+            }
+        }
+    </script>
+</body>
+</html>

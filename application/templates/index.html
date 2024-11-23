@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <title>Snack Shop</title>
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+  <!-- font awesome style -->
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet" />
+  <!-- slick slider -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" integrity="sha256-UK1EiopXIL+KVhfbFa8xrmAWPeBjMVdvYMYkTAEv/HI=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css.map" integrity="undefined" crossorigin="anonymous" />
+  <!-- Custom styles for this template -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{{ url_for('static', filename='css/responsive.css') }}" rel="stylesheet" />
+  <style>
+    .slider_container .item img {
+      width: 100%;
+      height: 300px; /* Adjust height as needed */
+      object-fit: cover;
+    }
+    </style>
+</head>
+<body>
+  <form method="post">
+    {{ form.hidden_tag() }}
+  </form>
+
+  <div class="hero_area">
+    <!-- header section starts -->
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
+          <a class="navbar-brand" href="{{ url_for('index') }}">
+            <span>
+              Shack Snack
+            </span>
+          </a>
+          <div class="" id="">
+            <div class="User_option">
+              {% if session.get('logged_in') %}
+                <a href="{{ url_for('logout') }}">
+                  <i class="fa fa-sign-out" aria-hidden="true"></i>
+                  <span>Logout</span>
+                </a>
+              {% else %}
+                <a href="{{ url_for('login') }}">
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                  <span>Login</span>
+                </a>
+              {% endif %}
+            </div>
+            <div class="custom_menu-btn">
+              <button onclick="openNav()">
+                <img src="{{ url_for('static', filename='images/menu.png') }}" alt="">
+              </button>
+            </div>
+            <div id="myNav" class="overlay">
+              <div class="overlay-content">
+                <a href="{{ url_for('profile') }}">Profile</a>
+                <a href="{{ url_for('shop') }}">Shop</a>
+                <a href="{{ url_for('index') }}">Home</a>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+    <!-- slider section -->
+    <section class="slider_section ">
+      <div class="container ">
+        <div class="row">
+          <div class="col-lg-10 mx-auto">
+            <div class="detail-box">
+              <h1>
+                Discover Exquisite Snacks
+              </h1>
+              <p>
+                Snacks so good, that you can't find them no where else in the world but here!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slider_container">
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/cookies2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/chips2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/gummies2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/pretzels2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/chocolate2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/cookies2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/chips2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/gummies2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/pretzels2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/chocolate2.jpg') }}" alt="" />
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- end slider section -->
+  </div>
+  <!-- about section -->
+  <section class="about_section layout_padding">
+    <div class="container">
+      <div class="col-md-11 col-lg-10 mx-auto">
+        <div class="heading_container heading_center">
+          <h2>
+            About Us
+          </h2>
+        </div>
+        <div class="box">
+          <div class="col-md-7 mx-auto">
+            <div class="img-box">
+              <img src="{{ url_for('static', filename='images/about-img.png') }}" class="box-img" alt="">
+            </div>
+          </div>
+          <div class="detail-box">
+            <p>
+              Virginia, looked up one of the more obscure Latin words.
+            </p>
+            <a href="">
+              <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- end about section -->
+  <div class="footer_container">
+    <!-- info section -->
+    <section class="info_section ">
+      <div class="container">
+        <div class="info_links">
+          <ul>
+            <li>
+              <a href="{{ url_for('profile') }}">
+                Profile
+              </a>
+            </li>
+            <li>
+              <a class="" href="{{ url_for('shop') }}">
+                Shop
+              </a>
+            </li>
+            <li>
+              <a class="" href="{{ url_for('index') }}">
+                Home
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- end info_section -->
+    <!-- footer section -->
+    <footer class="footer_section">
+      <div class="container">
+        <p>
+          &copy; <span id="displayYear"></span> All Rights Reserved By
+          <a href="https://html.design/">Free Html Templates</a><br>
+          Distributed By: <a href="https://themewagon.com/">ThemeWagon</a>
+        </p>
+      </div>
+    </footer>
+    <!-- footer section -->
+  </div>
+  <!-- jQery -->
+  <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+  <!-- bootstrap js -->
+  <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+  <!-- slick slider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.js"></script>
+  <!-- nice select -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js" integrity="sha256-Zr3vByTlMGQhvMfgkQ5BtWRSKBGa2QlspKYJnkjZTmo=" crossorigin="anonymous"></script>
+  <!-- custom js -->
+  <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+</body>
+</html>

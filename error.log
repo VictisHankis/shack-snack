@@ -1,0 +1,15 @@
+Unhandled Exception: 400 Bad Request: The CSRF token is missing.
+Unhandled Exception: 400 Bad Request: The CSRF token is missing.
+Unhandled Exception: 400 Bad Request: The CSRF token is missing.
+Unhandled Exception: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+Unhandled Exception: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+Unhandled Exception: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+Unhandled Exception: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+Unhandled Exception: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+Unhandled Exception: (sqlite3.IntegrityError) UNIQUE constraint failed: user.username
+[SQL: INSERT INTO user (username, email, password_hash) VALUES (?, ?, ?)]
+[parameters: (Markup('test'), Markup('testing@gmail.com'), 'scrypt:32768:8:1$8YmyZmPJBMJ8fQT2$223c59a77e626f5c84bcb5ed35593c356b51caebbd781b7fb68371291450780b8e4076eb8cb62aa4d29ba0b818a6e605b49e4ffd9509dfe40f7aaf786c894997')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Unhandled Exception: Encountered unknown tag 'end'. Jinja was looking for the following tags: 'endif'. The innermost block that needs to be closed is 'if'.
+Unhandled Exception: Encountered unknown tag 'end'. Jinja was looking for the following tags: 'endif'. The innermost block that needs to be closed is 'if'.
+
