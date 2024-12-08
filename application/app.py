@@ -1,6 +1,5 @@
 from flask import Flask, render_template, request, redirect, url_for, session, flash
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate import Migrate
 from flask_wtf import CSRFProtect
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime, timedelta
@@ -8,14 +7,15 @@ from markupsafe import escape
 from forms import EmptyForm
 import re, logging
 from logging.handlers import RotatingFileHandler
+from functools import wraps
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///snackshop.db'
 app.config['SECRET_KEY'] = 'your_secret_key'
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(minutes=30)
 db = SQLAlchemy(app)
-migrate = Migrate(app, db)
 csrf = CSRFProtect(app)
+
 
 class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -74,7 +74,7 @@ class OrderItem(db.Model):
 def index():
     form = EmptyForm()
     snacks = Snack.query.all()
-    return render_template('index.html', snacks=snacks, form =form)
+    return render_template('index.html', snacks=snacks, form=form)
 
 def is_password_strong(password):
     if (len(password) < 8 or
@@ -90,8 +90,8 @@ def register():
     form = EmptyForm()
     if request.method == 'POST':
         username = request.form['username']
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form['reg_email']
+        password = request.form['reg_password']
         confirm_password = request.form['confirm_password']
 
         if not re.match(r"[^@]+@[^@]+\.[^@]+", email):
@@ -147,23 +147,30 @@ def login():
 
     return render_template('login.html', form=form)
 
+def is_logged_in(f):
+    @wraps(f)
+    def wrap(*args, **kwargs):
+        if 'logged_in' in session:
+            return f(*args, **kwargs)
+        else:
+            flash('Unauthorized, Please login', 'danger')
+            return redirect(url_for('index'))
+    return wrap
+
 @app.route('/logout')
 def logout():
     session.clear() 
     return redirect(url_for('index'))
 
 @app.route('/profile')
+@is_logged_in
 def profile():
     form = EmptyForm()
-    if 'user_id' not in session or not session.get('logged_in'): 
-        return redirect(url_for('login'))
-    
-    if 'user_id' in session:
-        user_id = session['user_id']
-        user = User.query.filter_by(id=user_id).first()
-        
-        cart = Cart.query.filter_by(user_id=user_id).first()
+    user_id = session['user_id']
 
+    if user_id:
+        user = User.query.filter_by(id=user_id).first()
+        cart = Cart.query.filter_by(user_id=user_id).first()
         detailed_cart_items = []
         if cart:
             cart_items = CartItem.query.filter_by(cart_id=cart.id).all()
@@ -171,6 +178,7 @@ def profile():
                 snack = Snack.query.get(item.snack_id)
                 if snack:
                     detailed_cart_items.append({
+                        'cart_item_id': item.id,
                         'name': snack.name,
                         'price': snack.price,
                         'quantity': item.quantity,
@@ -178,10 +186,8 @@ def profile():
                     })
 
         wishlist = Wishlist.query.filter_by(user_id=user_id).all()
-
         liked_snacks = LikedSnack.query.filter_by(user_id=user_id).all()
         liked_snacks_list = [Snack.query.get(liked_snack.snack_id) for liked_snack in liked_snacks]
-
         orders = Order.query.filter_by(user_id=user_id).all()
 
         return render_template(
@@ -193,12 +199,13 @@ def profile():
             orders=orders,
             form=form
         )
-    return redirect(url_for('login'))
+    else:
+        return redirect(url_for('index'))
 
 @app.route('/add_to_wishlist/<int:snack_id>', methods=['POST'])
 def add_to_wishlist(snack_id):
     if 'user_id' not in session or not session.get('logged_in'):
-        return redirect(url_for('login'))
+        return redirect(url_for('index'))
     
     user_id = session['user_id']
     new_wishlist_item = Wishlist(user_id=user_id, snack_id=snack_id)
@@ -216,7 +223,7 @@ def like_snack(snack_id):
         db.session.add(liked_snack)
         db.session.commit()
         return redirect(url_for('shop'))
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 @app.route('/toggle_like/<int:snack_id>', methods=['POST'])
 @csrf.exempt
@@ -237,7 +244,7 @@ def toggle_like(snack_id):
             
             next_page = request.form.get("next_page", "profile")
             return redirect(url_for(next_page))
-    return redirect(url_for('login'))
+    return redirect(url_for('index'))
 
 @app.route('/shop')
 def shop():
@@ -245,9 +252,12 @@ def shop():
     if 'user_id' in session:
         user_id = session['user_id']
         liked_snacks = [like.snack_id for like in LikedSnack.query.filter_by(user_id=user_id).all()]
-        snacks = Snack.query.all()
-        return render_template('shop.html', snacks=snacks, liked_snacks=liked_snacks, form=form)
-    return redirect(url_for('login'))
+    else:
+        user_id = None
+        liked_snacks = []
+
+    snacks = Snack.query.all()
+    return render_template('shop.html', snacks=snacks, liked_snacks=liked_snacks, form=form, user_id=user_id)
 
 @app.route('/add_to_cart/<int:snack_id>', methods=['POST'])
 @csrf.exempt
@@ -255,7 +265,7 @@ def add_to_cart(snack_id):
     form = EmptyForm()
     if form.validate_on_submit():
         if 'user_id' not in session:
-            return redirect(url_for('login'))
+            return redirect(url_for('index'))
 
         snack = Snack.query.get(snack_id)
         if not snack:
@@ -290,11 +300,22 @@ def add_to_cart(snack_id):
         return redirect(url_for('shop'))
     return redirect(url_for('shop'))
 
+@app.route('/remove_from_cart/<int:cart_item_id>', methods=['POST'])
+def remove_from_cart(cart_item_id):
+    if 'user_id' in session:
+        cart_item = CartItem.query.get(cart_item_id)
+        if cart_item and cart_item.cart.user_id == session['user_id']:
+            db.session.delete(cart_item)
+            db.session.commit()
+            flash('Item removed from cart', 'success')
+        else:
+            flash('Item not found or unauthorized action', 'error')
+    return redirect(url_for('checkout'))
+
 @app.route('/checkout', methods=['GET', 'POST'])
+@is_logged_in
 def checkout():
     form = EmptyForm()
-    if 'user_id' not in session:
-        return redirect(url_for('login'))
 
     user_id = session['user_id']
     cart = Cart.query.filter_by(user_id=user_id).first()
@@ -310,46 +331,63 @@ def checkout():
         snack = Snack.query.get(item.snack_id)
         if snack:
             detailed_items.append({
+                'cart_item_id': item.id,
                 'name': snack.name,
                 'price': snack.price,
                 'quantity': item.quantity,
                 'item_total': snack.price * item.quantity
             })
 
-    if request.method == 'POST': 
-        try: 
-            order = Order(user_id=user_id) 
-            db.session.add(order) 
-            db.session.commit() 
+    if request.method == 'POST':
+        try:
+            order = Order(user_id=user_id)
+            db.session.add(order)
+            db.session.commit()
+
+            for item in cart_items:
+                order_item = OrderItem(order_id=order.id, snack_id=item.snack_id, quantity=item.quantity)
+                db.session.add(order_item)
             
-            for item in cart_items: 
-                order_item = OrderItem(order_id=order.id, snack_id=item.snack_id, quantity=item.quantity) 
-                db.session.add(order_item) 
-                
-            db.session.commit() 
+            db.session.commit()
             CartItem.query.filter_by(cart_id=cart.id).delete()
-            db.session.delete(cart) 
-            db.session.commit() 
+            db.session.delete(cart)
+            db.session.commit()
             
-            flash("Thank you for your purchase!") 
-            return redirect(url_for('profile')) 
+            flash("Thank you for your purchase!")
+            return redirect(url_for('profile'))
         
-        except Exception as e: 
-            app.logger.error(f"Checkout failed: {e}") 
-            flash("An error occurred during checkout. Please try again.") 
+        except Exception as e:
+            app.logger.error(f"Checkout failed: {e}")
+            flash("An error occurred during checkout. Please try again.")
             return redirect(url_for('checkout'))
 
     total = sum(item['item_total'] for item in detailed_items)
 
     return render_template('checkout.html', cart_items=detailed_items, total="{:.2f}".format(total), form=form)
 
-@app.route('/order_history')
-def order_history():
+@app.context_processor
+def inject_cart_items():
+    form = EmptyForm()
+    cart_items = None
     if 'user_id' in session:
         user_id = session['user_id']
-        orders = Order.query.filter_by(user_id=user_id).all()
-        return render_template('order_history.html', orders=orders)
-    return redirect(url_for('login'))
+        cart = Cart.query.filter_by(user_id=user_id).first()
+        if cart:
+            cart_items = CartItem.query.filter_by(cart_id=cart.id).all()
+    return dict(cart_items=cart_items)
+
+@app.route('/order_history')
+@is_logged_in
+def order_history():
+    user_id = session['user_id']
+    orders = Order.query.filter_by(user_id=user_id).all()
+    form = EmptyForm() 
+    return render_template('order_history.html', orders=orders, form=form)    
+
+@app.route('/about')
+def about():
+    form = EmptyForm()
+    return render_template('about.html', form=form)
 
 @app.before_request
 def make_session_permanent():
