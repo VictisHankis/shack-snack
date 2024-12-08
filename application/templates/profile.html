@@ -1,104 +1,81 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Profile</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f7f7f7;
-            color: #333;
-            margin: 0;
-            padding: 20px;
-        }
-        h1 {
-            color: #555;
-        }
-        .snack, .order {
-            background: #fff;
-            padding: 20px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            margin-bottom: 20px;
-        }
-        button {
-            background: #f44336;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background: #e53935;
-        }
-        .snack img {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
-    </style>
-</head>
-<body>
-    <h1>Welcome, {{ user.username }}</h1>
-    <form method="post">
-        {{ form.hidden_tag() }}
-    </form>
+{% extends 'layout.html' %}
 
-    <h2>Your Wishlist</h2>
-    <ul>
-    {% for item in wishlist %}
-        <li>{{ item.snack.name }}</li>
-    {% endfor %}
-    </ul>
+{% block body %}
+    <html lang="en"> 
+    <head> 
+        <meta charset="UTF-8"> 
+        <title>Profile</title> 
+        <style>
+            .cart-item { 
+                background: #fff; 
+                padding: 20px; 
+                border: 1px solid #ddd; 
+                border-radius: 5px; 
+                margin-bottom: 20px; 
+            } 
+            .cart-item h3 { 
+                margin: 0; 
+            } 
+            .cart-item p { 
+                margin: 5px 0; 
+            } 
+            .btn-danger { 
+                background: #f44336; 
+                color: white; 
+                padding: 10px 20px; 
+                border: none; 
+                border-radius: 5px; 
+                cursor: pointer; 
+            } 
+            .btn-danger:hover { 
+                background: #d32f2f; 
+            }
+        </style>
+    </head> 
+    <body>
+        <h1>Welcome, {{ user.username }}</h1>
+        <form method="post">
+            {{ form.hidden_tag() }}
+        </form>
 
-    <h2>Liked Snacks</h2>
-    {% for snack in liked_snacks %}
-        <div class="snack">
-            <img src="{{ url_for('static', filename='images/' + snack.name | lower + '.jpg') }}" alt="Image of {{ snack.name }}">
-            <h3>{{ snack.name }}</h3>
-            <p>{{ snack.description }}</p>
-            <p>${{ snack.price }}</p>
-            <form action="{{ url_for('toggle_like', snack_id=snack.id) }}" method="post">
-                {{ form.hidden_tag() }}
-                <input type="hidden" name="next_page" value="profile">
-                <button type="submit">Remove</button>
-            </form>
-        </div>
-    {% endfor %}
-    
-    <h2>Your Past Orders</h2>
-    {% if orders %}
-        {% for order in orders %}
-            <div class="order">
-                <p class="order-date">Order Date: {{ order.date.strftime('%Y-%m-%d %I:%M %p') }}</p>
-                <ul>
-                {% for item in order.order_items %}
-                    <li class="order-item">{{ item.snack.name }} - Quantity: {{ item.quantity }} - ${{ item.snack.price }} each</li>
-                {% endfor %}
-                </ul>
-                <hr>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>You have no past orders.</p>
-    {% endif %}
-
-    <h2>Your Cart</h2>
-    {% if cart_items %}
+        <h2>Your Wishlist</h2>
         <ul>
-        {% for item in cart_items %}
-            <li>{{ item.name }} - Quantity: {{ item.quantity }} - ${{ item.price }} each</li>
+        {% for item in wishlist %}
+            <li>{{ item.snack.name }}</li>
         {% endfor %}
         </ul>
-        <a href="{{ url_for('checkout') }}" class="checkout-button">Proceed to Checkout</a>
-    {% else %}
-        <p>Your cart is empty!</p>
-    {% endif %}    
 
-    <a href="{{ url_for('order_history') }}">View Order History</a>
-    <a href="{{ url_for('index') }}">Back to Home</a>
-    <a href="{{ url_for('shop') }}">Go to Shop</a>
-</body>
-</html>
+        <h2>Liked Snacks</h2>
+        {% for snack in liked_snacks %}
+            <div class="snack">
+                <img src="{{ url_for('static', filename='images/' + snack.name | lower + '.jpg') }}" alt="Image of {{ snack.name }}">
+                <h3>{{ snack.name }}</h3>
+                <p>{{ snack.description }}</p>
+                <p>${{ snack.price }}</p>
+                <form action="{{ url_for('toggle_like', snack_id=snack.id) }}" method="post">
+                    {{ form.hidden_tag() }}
+                    <input type="hidden" name="next_page" value="profile">
+                    <button type="submit">Remove</button>
+                </form>
+            </div>
+        {% endfor %}
+        
+        <h2>Your Cart</h2>
+        {% if cart_items %}
+            {% for item in cart_items %} 
+                <div class="cart-item"> 
+                    <h3>{{ item.name }}</h3> 
+                    <p>Price: ${{ item.price }}</p> 
+                    <p>Quantity: {{ item.quantity }}</p> 
+                    <p>Total: ${{ item.item_total }}</p> 
+                    <form action="{{ url_for('remove_from_cart', cart_item_id=item.cart_item_id) }}" method="post"> 
+                        {{ form.hidden_tag() }} 
+                        <button type="submit" class="btn btn-danger">Remove</button> 
+                    </form> 
+                </div> 
+            {% endfor %}
+        {% else %}
+            <p>Your cart is empty!</p>
+        {% endif %}    
+    </body>
+{% endblock %}
