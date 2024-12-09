@@ -18,63 +18,60 @@ Installation
 Follow these steps to set up the Shack the Snack Application on your local machine:
 
 1. Clone the Repository:
-git clone https://github.com/VictisHankis/shack-snack.git
+  git clone https://github.com/VictisHankis/shack-snack.git
 
 2. Navigate to the Project Directory:
-cd shack-snack
+  cd shack-snack
 
 3. Create a Virtual Environment:
-python -m venv venv
+  python -m venv venv
 
 4. Activate the Virtual Environment:
-On Windows:
-venv\Scripts\activate
+  On Windows:
+  venv\Scripts\activate
 
-On macOS/Linux:
-source venv/bin/activate
+  On macOS/Linux:
+  source venv/bin/activate
 
-5. Install Dependencies (Ensure a requirements.txt file is present. If not, you'll need to create one from your existing environment):
-pip install -r requirements.txt
+5. Set the FLASK_APP Environment Variable:
+  On Windows (Command Prompt):
+  set FLASK_APP=application/app.py
 
-6. Set the FLASK_APP Environment Variable:
-On Windows (Command Prompt):
-set FLASK_APP=application/app.py
+  On PowerShell:
+  $env:FLASK_APP = "application/app.py"
 
-On PowerShell:
-$env:FLASK_APP = "application/app.py"
+  On macOS/Linux:
+  export FLASK_APP=application/app.py
 
-On macOS/Linux:
-export FLASK_APP=application/app.py
+6. Set Up the Database:
+  flask db upgrade
 
-7. Set Up the Database:
-flask db upgrade
-
-8. Run the Application:
-flask run
+7. Run the Application:
+  flask run
 
 Troubleshooting: 'flask' Command Not Recognized
 If you receive the error message "'flask' is not recognized as an internal or external command, operable program or batch file," follow these additional steps:
 
 1. Verify Flask and Required Packages Installation: Ensure Flask, Flask-Migrate, Flask-WTF, and Flask-SQLAlchemy are installed:
-pip install flask flask-migrate flask-wtf flask_sqlalchemy 
+  pip install flask flask-migrate flask-wtf flask_sqlalchemy 
 
 2. Set the FLASK_APP Environment Variable Again:
-On Windows (Command Prompt):
-set FLASK_APP=application/app.py
+  On Windows (Command Prompt):
+  set FLASK_APP=application/app.py
 
-On PowerShell:
-$env:FLASK_APP = "application/app.py"
+  On PowerShell:
+  $env:FLASK_APP = "application/app.py"
 
-On macOS/Linux:
-export FLASK_APP=application/app.py
+  On macOS/Linux:
+  export FLASK_APP=application/app.py
 
 3. Run the Database Commands:
-flask db init
-flask db migrate
-flask db upgrade
+  flask db init
+  flask db migrate
+  flask db upgrade
 
 4. Run the Application:
-flask run
+  flask run
 
 Usage
 1. Open Your Browser: Navigate to http://127.0.0.1:5000.
