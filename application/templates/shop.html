@@ -1,0 +1,96 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Shop</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f7f7f7;
+                color: #333;
+                margin: 0;
+                padding: 0px;
+            }
+            h1 {
+                color: #555;
+            }
+            .snack {
+                background: #fff;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+            button {
+                background: #4CAF50;
+                color: white;
+                padding: 10px 20px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            button:hover {
+                background: #45a049;
+            }
+            .like-button {
+                background: #ff4081;
+            }
+            .remove-button {
+                background: #f44336;
+            }
+            .snack img {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+                margin-bottom: 10px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Shop</h1>
+        <form method="post">
+            {{ form.hidden_tag() }}
+        </form>
+        
+        {% for snack in snacks %}
+            <div class="snack">
+                <img src="{{ url_for('static', filename='images/' + snack.name | lower + '.jpg') }}" alt="Image of {{ snack.name }}">
+                <h2>{{ snack.name }}</h2>
+                <p>{{ snack.description }}</p>
+                <p>${{ snack.price }}</p>
+                {% if user_id %}
+                    <form action="{{ url_for('toggle_like', snack_id=snack.id) }}" method="post">
+                        {{ form.hidden_tag() }}
+                        <input type="hidden" name="next_page" value="shop">
+                        {% if snack.id in liked_snacks %}
+                            <button class="remove-button" type="submit">Unlike</button>
+                        {% else %}
+                            <button class="like-button" type="submit">Like</button>
+                        {% endif %}
+                    </form>
+                    
+                    <form action="{{ url_for('add_to_cart', snack_id=snack.id) }}" method="post">
+                        {{ form.hidden_tag() }}
+                        <input type="number" name="quantity" value="1" min="1" style="width: 50px;">
+                        <button type="submit">Add to Cart</button>
+                    </form>
+                {% else %}
+                    <form onsubmit="redirectToLogin(event)"> 
+                        {{ form.hidden_tag() }}
+                        <input type="number" name="quantity" value="1" min="1" style="width: 50px;"> 
+                        <button type="submit">Add to Cart</button> 
+                    </form>
+                {% endif %}
+            </div>
+        {% endfor %}
+        <script> 
+            function redirectToLogin(event) { 
+                event.preventDefault(); 
+                window.location.href = "{{ url_for('login') }}"; 
+            } 
+        </script>
+    </body>
+    </html>
+{% endblock %}

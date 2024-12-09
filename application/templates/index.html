@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- Basic -->
+  <meta charset="utf-8" />
+  <title>Snack Shop</title>
+  <!-- bootstrap core css -->
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+  <!-- font awesome style -->
+  <link href="{{ url_for('static', filename='css/font-awesome.min.css') }}" rel="stylesheet" />
+  <!-- slick slider -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.css" integrity="sha256-UK1EiopXIL+KVhfbFa8xrmAWPeBjMVdvYMYkTAEv/HI=" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css.map" integrity="undefined" crossorigin="anonymous" />
+  <!-- Custom styles for this template -->
+  <link href="{{ url_for('static', filename='css/style.css') }}" rel="stylesheet" />
+  <!-- responsive style -->
+  <link href="{{ url_for('static', filename='css/responsive.css') }}" rel="stylesheet" />
+  <style>
+    .slider_container .item img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+    .open-button {
+      background-color: transparent;
+      color: white;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+    }
+    .form-popup {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 10;
+    }
+    .form-container {
+      max-width: 500px;
+      padding: 10px;
+      background-color: whitesmoke;
+    }
+    .form-container .btn {
+      background-color: #04AA6D;
+      color: white;
+      padding: 16px 20px;
+      border: none;
+      cursor: pointer;
+      width: 100%;
+      margin-bottom:10px;
+      opacity: 0.8;
+    }
+    .form-container .cancel {
+      background-color: red;
+    }
+    .form-container .btn:hover, .open-button:hover {
+      opacity: 1;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-bottom: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    .show-password {
+      display: flex;
+      align-items: left;
+      gap: 2px;
+    }
+    .register-link { 
+      text-align: center; 
+      margin-top: 20px; 
+    }
+    .register-link a { 
+      color: blue; 
+      text-decoration: none; 
+    } 
+    .register-link a:hover { 
+      text-decoration: underline;
+    }
+    .login-overlay { 
+      display: none; 
+      position: fixed; 
+      top: 0; 
+      left: 0; 
+      width: 100%; 
+      height: 100%; 
+      background-color: rgba(0, 0, 0, 0.5); 
+      z-index: 9; 
+    }
+    .custom_menu-btn button {
+      margin: 0;
+      padding: 0; 
+      border: none;
+      background-color: transparent; 
+      display: inline-block; 
+      vertical-align: middle; 
+    }
+    .disabled-button { 
+      pointer-events: none; 
+      opacity: 0.5; 
+      margin: 0; 
+      padding: 16px 20px; 
+    }
+    #registerForm { 
+      z-index: 11; 
+    }
+    </style>
+</head>
+<body>
+  <form method="post">
+    {{ form.hidden_tag() }}
+  </form>
+  <div class="hero_area">
+    <!-- header section starts -->
+    <header class="header_section">
+      <div class="container-fluid">
+        <nav class="navbar navbar-expand-lg custom_nav-container">
+          <a class="navbar-brand" href="{{ url_for('index') }}">
+            <span>
+              Shack Snack
+            </span>
+          </a>
+          <div class="" id="">
+            <div class="User_option">
+              {% if session.get('logged_in') %}
+                <a href="{{ url_for('logout') }}">
+                  <i class="fa fa-sign-out" aria-hidden="true"></i>
+                  <span>Logout</span>
+                </a>
+              {% else %}
+                <button class="open-button" onclick="openForm()">
+                  <i class="fa fa-user" aria-hidden="true"></i>
+                  <span>Login</span>
+                </button>
+                <div class="login-overlay" id="loginOverlay"></div>
+                <div class="form-popup" id="myForm">
+                  <form action="{{ url_for('login') }}" method="post" class="form-container">
+                    <h1>Login</h1>
+                    {{ form.hidden_tag() }}
+                    <label for="email">Email</label>
+                    <input type="email" placeholder="Enter Email" name="email" id="email" required>
+                    <label for="password">Password</label>
+                    <input type="password" placeholder="Enter Password" name="password" id="password" required>
+                    <div class="show-password">
+                      <span>Show Password</span>
+                      <span> <input type="checkbox" onclick="togglePassword()"> </span>
+                    </div>
+                    <button type="submit" class="btn">Login</button> 
+                    <button type="button" class="btn cancel" onclick="closeForm()">Close</button> 
+                    <div class="register-link">
+                      <p>Don't have an account? <a href="javascript:void(0)" onclick="openRegisterForm()">Sign Up here</a></p>
+                    </div>                    
+                  </form>
+                </div>
+                <div class="form-popup" id="registerForm">
+                  <form action="{{ url_for('register') }}" method="post" class="form-container">
+                    <h1>Register</h1>
+                    {{ form.hidden_tag() }}
+                    <label for="username">Username</label>
+                    <input type="text" placeholder="Enter Username" name="username" id="username" required>
+                    <label for="reg_email">Email</label>
+                    <input type="email" placeholder="Enter Email" name="reg_email" id="reg_mail" required>
+                    <label for="reg_password">Password</label>
+                    <input type="password" placeholder="Enter Password" name="reg_password" id="reg_password" required>
+                    <label for="confirm_password">Confirm Password</label>
+                    <input type="password" placeholder="Confirm Password" name="confirm_password" id="confirm_password" required>
+                    <div class="show-password">
+                      <span>Show Password</span>
+                      <span> <input type="checkbox" onclick="regTogglePassword()"> </span>
+                    </div>
+                    <button type="submit" class="btn">Register</button> 
+                    <button type="button" class="btn cancel" onclick="closeRegisterForm()">Close</button>
+                  </form>
+                </div>                
+              {% endif %}
+            </div>
+            <div class="custom_menu-btn">
+              <button class="open-button" id="menuOpenButton" onclick="openNav()">
+                <img src="{{ url_for('static', filename='images/menu.png') }}" alt="">
+              </button>
+            </div>
+            <div id="myNav" class="overlay">
+              <div class="overlay-content">
+                {% if session.get('logged_in') %}
+                  <a href="{{ url_for('profile') }}">Profile</a>
+                  {% if cart_items %}
+                    <a href="{{ url_for('checkout') }}">Checkout</a>
+                  {% endif %}
+                  <a href="{{ url_for('shop') }}">Shop</a>
+                  <a href="{{ url_for('about') }}">About</a>
+                {% else %}
+                  <a href="{{ url_for('shop') }}">Shop</a>
+                  <a href="{{ url_for('about') }}">About</a>
+                {% endif %}
+
+              </div>
+            </div>
+          </div>
+        </nav>
+      </div>
+    </header>
+    <!-- end header section -->
+    <!-- slider section -->
+    <section class="slider_section ">
+      <div class="container ">
+        <div class="row">
+          <div class="col-lg-10 mx-auto">
+            <div class="detail-box">
+              <h1>
+                Discover Exquisite Snacks
+              </h1>
+              <p>
+                Snacks so good, that you can't find them no where else in the world but here!
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="slider_container">
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/cookies2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/chips2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/gummies2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/pretzels2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/chocolate2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/cookies2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/chips2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/gummies2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/pretzels2.jpg') }}" alt="" />
+          </div>
+        </div>
+        <div class="item">
+          <div class="img-box">
+            <img src="{{ url_for('static', filename='images/chocolate2.jpg') }}" alt="" />
+          </div>
+        </div>
+      </div>
+    </section>
+    <!-- end slider section -->
+  </div>
+  <!-- about section -->
+  <section class="about_section layout_padding">
+    <div class="container">
+      <div class="col-md-11 col-lg-10 mx-auto">
+        <div class="heading_container heading_center">
+          <h2>
+            About Us
+          </h2>
+        </div>
+        <div class="box">
+          <div class="col-md-7 mx-auto">
+            <div class="img-box">
+              <img src="{{ url_for('static', filename='images/about-img.png') }}" class="box-img" alt="">
+            </div>
+          </div>
+          <div class="detail-box">
+            <p>
+              At Shack Snack, we believe that a little sweetness can go a long way. Our mission is to bring joy and delight to our community through the magic of candy. From nostalgic classics to the latest confectionery creations, our goal is to offer a wide variety of treats that cater to every taste and occasion.            </p>
+            <a href="{{ url_for('about') }}">
+              <i class="fa fa-arrow-right" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- end about section -->
+  <div class="footer_container">
+    <!-- info section -->
+    <section class="info_section ">
+      <div class="container">
+        <div class="info_links">
+          <ul>
+            <li>
+              <a class="" href="{{ url_for('shop') }}">
+                Shop
+              </a>
+            </li>
+            <li>
+              <a class="" href="{{ url_for('about') }}">
+                About
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </section>
+    <!-- end info_section -->
+    <!-- footer section -->
+    <footer class="footer_section">
+      <div class="container">
+        <p>
+          &copy; <span id="displayYear"></span> All Rights Reserved By
+          <a href="https://html.design/">Free Html Templates</a><br>
+          Distributed By: <a href="https://themewagon.com/">ThemeWagon</a>
+        </p>
+      </div>
+    </footer>
+    <!-- footer section -->
+  </div>
+  <script>
+    function openForm() {
+      document.getElementById("myForm").style.display = "block";
+      document.getElementById("loginOverlay").style.display = "block";
+      document.getElementById("menuOpenButton").classList.add("disabled-button");
+    }
+    
+    function closeForm() {
+      document.getElementById("myForm").style.display = "none";
+      document.getElementById("loginOverlay").style.display = "none";
+      document.getElementById("menuOpenButton").classList.remove("disabled-button");
+    }
+    function openRegisterForm() { 
+      document.getElementById("registerForm").style.display = "block";
+    } 
+    function closeRegisterForm() { 
+      document.getElementById("registerForm").style.display = "none"; 
+    }
+    function togglePassword() {
+      var password = document.getElementById("password");
+      if (password.type === "password") {
+          password.type = "text";
+      } else {
+          password.type = "password";
+      }
+    }    
+    function regTogglePassword() {
+        var password = document.getElementById("reg_password");
+        var confirm_password = document.getElementById("confirm_password");
+        if (password.type === "password") {
+            password.type = "text";
+            confirm_password.type = "text";
+        } else {
+            password.type = "password";
+            confirm_password.type = "password";
+        }
+    }
+   
+  </script>
+  <!-- jQery -->
+  <script src="{{ url_for('static', filename='js/jquery-3.4.1.min.js') }}"></script>
+  <!-- bootstrap js -->
+  <script src="{{ url_for('static', filename='js/bootstrap.js') }}"></script>
+  <!-- slick slider -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.js"></script>
+  <!-- nice select -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-nice-select/1.1.0/js/jquery.nice-select.min.js" integrity="sha256-Zr3vByTlMGQhvMfgkQ5BtWRSKBGa2QlspKYJnkjZTmo=" crossorigin="anonymous"></script>
+  <!-- custom js -->
+  <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+</body>
+</html>

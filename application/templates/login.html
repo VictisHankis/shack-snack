@@ -1,0 +1,95 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Login</title>
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/bootstrap.css') }}" />
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f7f7f7;
+                color: #333;
+                margin: 0;
+                padding: 0px;
+            }
+            form {
+                max-width: 400px;
+                margin: auto;
+            }
+            input {
+                width: 100%;
+                padding: 8px;
+                margin-bottom: 16px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            .btn {
+                background-color: #04AA6D;
+                color: white;
+                padding: 16px 20px;
+                border: none;
+                cursor: pointer;
+                width: 100%;
+                margin-bottom:10px;
+                opacity: 0.8;
+            }
+            .btn:hover {
+                opacity: 1;
+            }
+            .show-password {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+            .register-link { 
+                text-align: center; 
+                margin-top: 20px; 
+            }
+            .cancel {
+                background-color: red;
+            }
+        </style>
+    </head>
+    <body>
+        {% if session.get('logged_in') %}
+            <script> 
+                window.location.href = "{{ url_for('index') }}"; 
+            </script>
+        {% else %}
+            <h1>Login</h1>
+            <form method="post">
+                {{ form.hidden_tag() }}
+                <label for="email">Email</label>
+                <input type="email" placeholder="Enter Email" name="email" id="email" required>
+                <label for="password">Password</label>
+                <input type="password" placeholder="Enter Password" name="password" id="password" required>
+                <div class="show-password">
+                    <span>Show Password</span>
+                    <span><input type="checkbox" onclick="togglePassword()"></span>
+                </div>
+                <button type="submit" class="btn">Login</button> 
+                <button type="button" class="btn cancel" onclick="navigateToIndex()">Close</button>
+            </form>
+
+            <div class="register-link">
+                <p>Don't have an account? <a href="{{ url_for('register') }}">Sign Up here</a></p>
+            </div>
+
+            <script>
+                function togglePassword() {
+                    var password = document.getElementById("password");
+                    if (password.type === "password") {
+                        password.type = "text";
+                    } else {
+                        password.type = "password";
+                    }
+                }
+                function navigateToIndex() { 
+                    window.location.href = "{{ url_for('index') }}"; 
+                }
+            </script>
+        {% endif %}
+    </body>
+{% endblock %}

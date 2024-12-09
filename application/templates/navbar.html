@@ -1,0 +1,45 @@
+<nav class="navbar navbar-custom">
+  <div class="container-fluid d-flex align-items-center">
+    <a class="navbar-brand" href="{{ url_for('index') }}">
+      <span>
+        Shack Snack
+      </span>
+    </a>
+    <div class="navbar-nav d-flex flex-row ms-auto">
+      {% if session.get('logged_in') %}
+        {% if request.path != url_for('index') %}
+          <a class="nav-link mx-2" href="{{ url_for('index') }}">Home</a>
+        {% endif %}
+        {% if request.path != url_for('shop') %}
+          <a class="nav-link mx-2" href="{{ url_for('shop') }}">Shop</a>
+        {% endif %}
+        {% if cart_items %}
+          {% if request.path != url_for('checkout') %}
+            <a class="nav-link mx-2" href="{{ url_for('checkout') }}">Checkout</a>
+          {% endif %}
+        {% endif %}  
+        {% if request.path == url_for('profile') %} 
+          <a class="nav-link mx-2" href="{{ url_for('order_history') }}">Order History</a> 
+        {% endif %}
+        {% if request.path == url_for('index') %} 
+          <a class="nav-link mx-2" href="{{ url_for('about') }}">About</a> 
+        {% endif %}
+        {% if request.path != url_for('profile') %}
+          <a class="nav-link mx-2" href="{{ url_for('profile') }}">Profile</a>
+        {% endif %}
+      
+      {% else %}
+        <a class="nav-link mx-2" href="{{ url_for('index') }}">Home</a>
+        {% if request.path != url_for('shop') %}
+          <a class="nav-link mx-2" href="{{ url_for('shop') }}">Shop</a>
+        {% endif %}
+        {% if request.path != url_for('about') %}
+          <a class="nav-link mx-2" href="{{ url_for('about') }}">About</a>
+        {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</nav>
+
+
+

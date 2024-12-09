@@ -1,0 +1,61 @@
+Unhandled Exception: 400 Bad Request: The CSRF token is missing.
+Unhandled Exception: 400 Bad Request: The CSRF token is missing.
+Unhandled Exception: 400 Bad Request: The CSRF token is missing.
+Unhandled Exception: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+Unhandled Exception: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+Unhandled Exception: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+Unhandled Exception: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+Unhandled Exception: Unexpected end of template. Jinja was looking for the following tags: 'endblock'. The innermost block that needs to be closed is 'block'.
+Unhandled Exception: (sqlite3.IntegrityError) UNIQUE constraint failed: user.username
+[SQL: INSERT INTO user (username, email, password_hash) VALUES (?, ?, ?)]
+[parameters: (Markup('test'), Markup('testing@gmail.com'), 'scrypt:32768:8:1$8YmyZmPJBMJ8fQT2$223c59a77e626f5c84bcb5ed35593c356b51caebbd781b7fb68371291450780b8e4076eb8cb62aa4d29ba0b818a6e605b49e4ffd9509dfe40f7aaf786c894997')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Unhandled Exception: Encountered unknown tag 'end'. Jinja was looking for the following tags: 'endif'. The innermost block that needs to be closed is 'if'.
+Unhandled Exception: Encountered unknown tag 'end'. Jinja was looking for the following tags: 'endif'. The innermost block that needs to be closed is 'if'.
+
+Unhandled Exception: 400 Bad Request: The CSRF session token is missing.
+Unhandled Exception: Could not build url for endpoint 'index.html'. Did you mean 'index' instead?
+Unhandled Exception: Could not build url for endpoint 'index.html'. Did you mean 'index' instead?
+Unhandled Exception: 400 Bad Request: The CSRF tokens do not match.
+Unhandled Exception: 400 Bad Request: The CSRF tokens do not match.
+Unhandled Exception: 400 Bad Request: The CSRF tokens do not match.
+Unhandled Exception: 400 Bad Request: The CSRF tokens do not match.
+Unhandled Exception: 'form' is undefined
+Unhandled Exception: 'form' is undefined
+Unhandled Exception: 'form' is undefined
+Unhandled Exception: 'form' is undefined
+Unhandled Exception: 400 Bad Request: The CSRF session token is missing.
+Unhandled Exception: 405 Method Not Allowed: The method is not allowed for the requested URL.
+Unhandled Exception: 405 Method Not Allowed: The method is not allowed for the requested URL.
+Unhandled Exception: 405 Method Not Allowed: The method is not allowed for the requested URL.
+Unhandled Exception: 405 Method Not Allowed: The method is not allowed for the requested URL.
+Unhandled Exception: 405 Method Not Allowed: The method is not allowed for the requested URL.
+Unhandled Exception: cannot access local variable 'error' where it is not associated with a value
+Unhandled Exception: 400 Bad Request: The CSRF tokens do not match.
+Unhandled Exception: 400 Bad Request: The CSRF tokens do not match.
+Unhandled Exception: 400 Bad Request: The CSRF tokens do not match.
+Unhandled Exception: (sqlite3.IntegrityError) UNIQUE constraint failed: user.username
+[SQL: INSERT INTO user (username, email, password_hash) VALUES (?, ?, ?)]
+[parameters: (Markup('testing'), Markup('test5@gmail.com'), 'scrypt:32768:8:1$86mV6pE4GgHfN77T$7ee71333625552a86b764743ba83315989c93ac3e8bd14a24c0ae172289719eb88e6b23b8b637cda9827534cd76c9969090a4b150e6c28c492d855a0c9e70d88')]
+(Background on this error at: https://sqlalche.me/e/20/gkpj)
+Unhandled Exception: 400 Bad Request: The CSRF tokens do not match.
+Unhandled Exception: Could not build url for endpoint 'about'. Did you mean 'logout' instead?
+Unhandled Exception: Could not build url for endpoint 'about'. Did you mean 'logout' instead?
+Unhandled Exception: Could not build url for endpoint 'about'. Did you mean 'logout' instead?
+Unhandled Exception: Could not build url for endpoint 'about'. Did you mean 'logout' instead?
+Unhandled Exception: Could not build url for endpoint 'about'. Did you mean 'logout' instead?
+Unhandled Exception: Could not build url for endpoint 'about'. Did you mean 'logout' instead?
+Unhandled Exception: Could not build url for endpoint 'about'. Did you mean 'logout' instead?
+Unhandled Exception: Could not build url for endpoint 'about'. Did you mean 'logout' instead?
+Unhandled Exception: 'user_id'
+Unhandled Exception: 'user_id'
+Unhandled Exception: 'snack_id'
+Unhandled Exception: 'dict object' has no attribute 'cart_item_id'
+Unhandled Exception: 'dict object' has no attribute 'cart_item_id'
+Unhandled Exception: 'form' is undefined
+Unhandled Exception: 'form' is undefined
+Unhandled Exception: 'form' is undefined
+Unhandled Exception: 'form' is undefined
+Unhandled Exception: 'form' is undefined
+Unhandled Exception: 'form' is undefined
+Unhandled Exception: 'form' is undefined

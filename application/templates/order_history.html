@@ -1,0 +1,57 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Order History</title>
+        <style>
+            body {
+                font-family: Arial, sans-serif;
+                background-color: #f7f7f7;
+                color: #333;
+                margin: 0;
+                padding: 0px;
+            }
+            h1 {
+                color: #555;
+            }
+            .order {
+                background: #fff;
+                padding: 20px;
+                border: 1px solid #ddd;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+            .order-date {
+                font-weight: bold;
+                margin-bottom: 10px;
+            }
+            ul {
+                list-style-type: none;
+                padding: 0;
+            }
+            li {
+                margin-bottom: 8px;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Order History</h1>
+        {% if orders %}
+            {% for order in orders %}
+                <div class="order">
+                    <p class="order-date">Order Date: {{ order.date.strftime('%Y-%m-%d %I:%M %p') }}</p>
+                    <ul>
+                    {% for item in order.order_items %}
+                        <li>{{ item.snack.name }} - Quantity: {{ item.quantity }} - ${{ item.snack.price }} each</li>
+                    {% endfor %}
+                    </ul>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>You have no past orders.</p>
+        {% endif %}
+    </body>
+    </html>
+{% endblock %}
